@@ -5,12 +5,16 @@ import BuySell from "./components/BuySell";
 import Header from './components/Header';
 import History from './components/History';
 import Orderbook from './components/OrderBook';
+import Prediction from './components/Prediction';
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen bg-black text-white">
       <Navbar />
-      <Header />
+      <div className="flex flex-row m-4">
+        <Header />
+        <Prediction />
+      </div>
       <div className="flex flex-grow flex-col lg:flex-row h-[calc(100vh-128px)] p-4 space-y-4 lg:space-y-0 lg:space-x-4 overflow-y-auto">
         <div className="lg:w-7/12 flex flex-col space-y-4">
           <Graph />

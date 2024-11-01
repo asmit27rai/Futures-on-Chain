@@ -37,12 +37,12 @@ task("deploy", "Deploy the oracle contract")
   });
 
 task("mint", "Mint tokens to the an address")
-  .addParam("account", "The contract to mint tokens to")
-  .setAction(async ({ account }, { ethers }) => {
+  .addParam("contractAddress", "The contract to mint tokens to")
+  .setAction(async ({ contractAddress }, { ethers }) => {
       const token = await ethers.getContractAt("Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
       const mintAmount = ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens
-      await token.mint(account,mintAmount);
-      console.log(`Minted 1,000,000 tokens to ${account}`);
+      await token.mint(contractAddress,mintAmount);
+      console.log(`Minted ${mintAmount.toString()} tokens to ${contractAddress}`);
   });
 
 task("oracle-query", "Queries the oracle contract")
@@ -74,6 +74,7 @@ task("oracle-query", "Queries the oracle contract")
       const dailyLow = await oracle.dailyLow();
       const dailyHigh = await oracle.dailyHigh();
       const dailyExchangeVolume = await oracle.dailyExchangeVolume();
+      const modelSignal = await oracle.modelSignal();
 
       ohlcvHistory.forEach((entry, index) => {
         console.log(`Entry ${index}:`);
@@ -89,6 +90,7 @@ task("oracle-query", "Queries the oracle contract")
       console.log(`DailyLow: ${dailyLow}`);
       console.log(`DailyHigh: ${dailyHigh}`);
       console.log(`DailyExchangeVolume: ${dailyExchangeVolume}`);
+      console.log(`ModelSignal: ${modelSignal}`);
     } catch {
       console.log(`No last observation available.`);
     }
@@ -206,5 +208,3 @@ task("get-orderbook-history", "Retrieves the orderbook history from the Oracle c
 // npx hardhat oracle-query 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --network sapphire-localnet
 // npx hardhat get-orderbook-history --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --network sapphire-localnet
 // npx hardhat get-pnl --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --address 0xfcd1e86925C9c066d31AacC78c9e7De32b4574Ae --network sapphire-localnet
-// npx hardhat transfer-native-token --account 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --amount 100
-// npx hardhat mint --account 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266

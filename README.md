@@ -57,8 +57,8 @@ This guide provides a step-by-step setup procedure to deploy and test a Futures 
 8. **Transfer Test Currency**: Fund your MetaMask account with test native currency and ERC-20 tokens:
 
   ```bash
-   npx hardhat transfer-native-token --account 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --amount 100
-   npx hardhat mint --account 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+   npx hardhat transfer-native-token --account <your_metamask_testing_account> --amount 100
+   npx hardhat mint --account <your_metamask_testing_account>
    ```
 
 ---

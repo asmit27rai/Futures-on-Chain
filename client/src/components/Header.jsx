@@ -1,64 +1,7 @@
-// import React, { useState, useEffect } from 'react';
-// import futures from '../backend/contracts/futures';
-
-// const Header = () => {
-//   const [marketPrice, setMarketPrice] = useState("0.00");
-//   const [dailyHigh, setDailyHigh] = useState("0.00");
-//   const [dailyLow, setDailyLow] = useState("0.00");
-//   const [indexPrice, setIndexPrice] = useState("0.00");
-//   const fetchMarketData = async () => {
-//     try {
-//       const marketPrice = await futures.methods.currentMarketPrice().call();
-//       const high = await futures.methods.dailyHigh().call();
-//       const low = await futures.methods.dailyLow().call();
-//       const index = await futures.methods.indexPrice().call();
-
-//       setMarketPrice((Number(marketPrice) / 1_000_000).toFixed(2));
-//       setDailyHigh((Number(high) / 1_000_000).toFixed(2));
-//       setDailyLow((Number(low) / 1_000_000).toFixed(2));
-//       setIndexPrice((Number(index) / 1_000_000).toFixed(2));
-//     } catch (error) {
-//       console.error("Error fetching market data:", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       fetchMarketData();
-//     }, 200);
-
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   return (
-//     <nav className="bg-gradient-to-r from-gray-800 to-gray-900 h-28 w-full flex items-center justify-center px-10 shadow-2xl rounded-xl mb-10">
-//       <div className="flex space-x-12 text-center">
-//         <div className="text-white flex flex-col items-center">
-//           <h1 className="text-sm font-semibold uppercase tracking-widest text-gray-400">Market Price</h1>
-//           <span className="text-3xl font-extrabold text-green-500 animate-pulse">${marketPrice}</span>
-//         </div>
-//         <div className="text-white flex flex-col items-center">
-//           <h1 className="text-sm font-semibold uppercase tracking-widest text-gray-400">Daily High</h1>
-//           <span className="text-3xl font-extrabold text-blue-500 animate-pulse">${dailyHigh}</span>
-//         </div>
-//         <div className="text-white flex flex-col items-center">
-//           <h1 className="text-sm font-semibold uppercase tracking-widest text-gray-400">Daily Low</h1>
-//           <span className="text-3xl font-extrabold text-red-500 animate-bounce">${dailyLow}</span>
-//         </div>
-//         <div className="text-white flex flex-col items-center">
-//           <h1 className="text-sm font-semibold uppercase tracking-widest text-gray-400">Index Price</h1>
-//           <span className="text-3xl font-extrabold text-yellow-500 animate-pulse">${indexPrice}</span>
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// };
-
-// export default Header;
-
 import React, { useState, useEffect, useCallback } from 'react';
-import futures from '../backend/contracts/futures';
 import { TrendingUp, TrendingDown, Activity, ArrowUp, ArrowDown } from 'lucide-react';
+import web3 from '../backend/contracts/web3';
+import futures from '../backend/contracts/futures';
 
 const Header = () => {
   const [marketPrice, setMarketPrice] = useState("0.00");
@@ -67,34 +10,45 @@ const Header = () => {
   const [dailyLow, setDailyLow] = useState("0.00");
   const [indexPrice, setIndexPrice] = useState("0.00");
   const [priceDirection, setPriceDirection] = useState(null);
+  const [dailyExchangeVolume, setDailyExchangeVolume] = useState("0.00");
   const [isLoading, setIsLoading] = useState(true);
+  const [priceChangeAnimation, setPriceChangeAnimation] = useState(false);
 
   const fetchMarketData = useCallback(async () => {
     try {
-      const marketPrice = await futures.methods.currentMarketPrice().call();
-      const high = await futures.methods.dailyHigh().call();
-      const low = await futures.methods.dailyLow().call();
-      const index = await futures.methods.indexPrice().call();
+      const [marketPrice, high, low, index, volume] = await Promise.all([
+        futures.methods.currentMarketPrice().call(),
+        futures.methods.dailyHigh().call(),
+        futures.methods.dailyLow().call(),
+        futures.methods.indexPrice().call(),
+        futures.methods.dailyExchangeVolume().call()
+      ]);
 
       const newMarketPrice = (Number(marketPrice) / 1_000_000).toFixed(2);
 
-      if (Number(newMarketPrice) > Number(marketPrice)) {
+      if (Number(newMarketPrice) > Number(previousPrice)) {
         setPriceDirection('up');
-      } else if (Number(newMarketPrice) < Number(marketPrice)) {
+      } else if (Number(newMarketPrice) < Number(previousPrice)) {
         setPriceDirection('down');
       }
 
-      setPreviousPrice(marketPrice);
+      if (newMarketPrice !== marketPrice) {
+        setPriceChangeAnimation(true);
+        setTimeout(() => setPriceChangeAnimation(false), 300); // reset animation after 300ms
+      }
+
+      setPreviousPrice(newMarketPrice);
       setMarketPrice(newMarketPrice);
       setDailyHigh((Number(high) / 1_000_000).toFixed(2));
       setDailyLow((Number(low) / 1_000_000).toFixed(2));
       setIndexPrice((Number(index) / 1_000_000).toFixed(2));
+      setDailyExchangeVolume((Number(volume) / 1_000_000).toFixed(2));
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching market data:", error);
       setIsLoading(false);
     }
-  }, [marketPrice]);
+  }, [previousPrice, marketPrice]);
 
   useEffect(() => {
     fetchMarketData();
@@ -102,94 +56,89 @@ const Header = () => {
     return () => clearInterval(interval);
   }, [fetchMarketData]);
 
-  useEffect(() => {
-    if (priceDirection) {
-      const timer = setTimeout(() => {
-        setPriceDirection(null);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [priceDirection]);
-
-  const getMarketPriceColor = () => {
-    if (priceDirection === 'up') return 'text-green-500';
-    if (priceDirection === 'down') return 'text-red-500';
-    return 'text-white';
-  };
-
-  const PriceCard = ({ title, value, icon: Icon, color, animation }) => (
-    <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-700 hover:border-gray-600 transition-all duration-300 min-w-[200px]">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400">{title}</h2>
-        <Icon className={`w-5 h-5 ${color}`} />
+  const PriceItem = ({ title, value, icon: Icon, color }) => (
+    <div className="flex flex-col items-center">
+      <div className="flex items-center gap-1">
+        <Icon className={`w-4 h-4 ${color}`} />
+        <span className="text-[8px] font-medium text-gray-600 uppercase">{title}</span>
       </div>
-      <div className={`text-3xl font-bold ${color} ${animation}`}>
+      <span className={`text-sm font-bold ${color} tabular-nums`}>
         ${value}
-      </div>
+      </span>
     </div>
   );
 
   if (isLoading) {
     return (
-      <div className="bg-gradient-to-r from-gray-800 to-gray-900 h-28 w-full flex items-center justify-center px-10 shadow-2xl rounded-xl mb-10">
-        <Activity className="w-8 h-8 text-blue-500 animate-spin" />
+      <div className="h-12 w-full flex items-center justify-center bg-gray-800/90 m-4 border rounded">
+        <Activity className="w-5 h-5 text-blue-500 animate-spin" />
       </div>
     );
   }
 
   return (
-    <nav className="bg-gradient-to-r from-gray-800/95 to-gray-900/95 backdrop-blur-lg p-8 w-full rounded-xl mb-10 shadow-2xl border border-gray-700 mt-4">
-      <div className="flex items-center justify-between space-x-6">
-        <PriceCard
+    <header className="bg-gray-800/90 backdrop-blur-sm h-12 px-3 w-full border-b border-gray-700 m-4 border rounded">
+      <div className="h-full max-w-screen-xl mx-auto flex items-center justify-between gap-3">
+        <PriceItem
           title="Market Price"
           value={marketPrice}
           icon={priceDirection === 'up' ? TrendingUp : TrendingDown}
-          color={getMarketPriceColor()}
-          animation={priceDirection === 'up' ? 'animate-bounce-short' : priceDirection === 'down' ? 'animate-bounce-down' : ''}
+          color={priceChangeAnimation ? (priceDirection === 'up' ? 'animate-green' : 'animate-red') : 'text-gray-500'}
         />
 
-        <PriceCard
+        <PriceItem
           title="Daily High"
           value={dailyHigh}
           icon={ArrowUp}
           color="text-blue-500"
-          animation="hover:scale-105"
         />
 
-        <PriceCard
+        <PriceItem
           title="Daily Low"
           value={dailyLow}
           icon={ArrowDown}
           color="text-red-500"
-          animation="hover:scale-105"
         />
 
-        <PriceCard
+        <PriceItem
           title="Index Price"
           value={indexPrice}
           icon={Activity}
           color="text-yellow-500"
-          animation="hover:scale-105"
+        />
+
+        <PriceItem
+          title="Daily Exchange Volume"
+          value={dailyExchangeVolume}
+          icon={Activity}
+          color="text-yellow-500"
         />
       </div>
 
       <style jsx>{`
-        @keyframes bounceShort {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+        .animate-green {
+          color: #22c55e; /* green */
+          animation: pulseGreen 0.3s ease-in-out;
         }
-        @keyframes bounceDown {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(10px); }
+
+        .animate-red {
+          color: #ef4444; /* red */
+          animation: pulseRed 0.3s ease-in-out;
         }
-        .animate-bounce-short {
-          animation: bounceShort 1s ease-in-out;
+
+        @keyframes pulseGreen {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); color: #22c55e; }
+          100% { transform: scale(1); }
         }
-        .animate-bounce-down {
-          animation: bounceDown 1s ease-in-out;
+
+        @keyframes pulseRed {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); color: #ef4444; }
+          100% { transform: scale(1); }
         }
       `}</style>
-    </nav>
+    </header>
   );
 };
 

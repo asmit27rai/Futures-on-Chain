@@ -1,7 +1,7 @@
-cargo:rustc-cfg=threading_component="custom"
 cargo:rustc-cfg=time_component="custom"
+cargo:rustc-cfg=threading_component="custom"
 cargo:rustc-cfg=c_compiler_component="freestanding"
-cargo:platform-components=threading_component=custom,time_component=custom,c_compiler_component=freestanding
+cargo:platform-components=time_component=custom,threading_component=custom,c_compiler_component=freestanding
 cargo:rerun-if-env-changed=RUST_MBEDTLS_SYS_SOURCE
 cargo:rerun-if-changed=vendor/CMakeLists.txt
 cargo:rerun-if-changed=vendor/include/mbedtls/config_psa.h
