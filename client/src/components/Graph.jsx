@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import futures from "../backend/contracts/futures";
 
@@ -9,7 +9,7 @@ const Graph = () => {
   const fetchData = async () => {
     if (futures) {
       try {
-        const data = await futures.methods.getOHLCVHistory().call(); // Assuming this returns an array of objects
+        const data = await futures.methods.getOHLCVHistory().call();
         const formattedData = data.map((item) => ({
           blockNumber: Number(item.blockNumber),
           open: Number(item.open) / 1_000_000,
@@ -18,9 +18,10 @@ const Graph = () => {
           close: Number(item.close) / 1_000_000,
           volume: Number(item.volume),
         }));
-        formattedData.reverse();
-        console.log(formattedData);
-        setDataArray(formattedData);
+        // Take only the last 30 points
+        const last30Points = formattedData.slice(-30).reverse();
+        console.log(last30Points);
+        setDataArray(last30Points);
       } catch (error) {
         console.error("Error fetching OHLC data:", error);
       }
@@ -56,6 +57,9 @@ const Graph = () => {
       height: 350,
       toolbar: { show: false },
       background: 'transparent',
+      animations: {
+        enabled: false
+      },
     },
     title: {
       text: 'ETH Token Price',
@@ -69,16 +73,13 @@ const Graph = () => {
     xaxis: {
       type: 'datetime',
       labels: {
-        formatter: (value, timestamp, index) => {
+        formatter: (value) => {
           const date = new Date(value);
-          if (date.getMinutes() % 5 === 0) {
-            return date.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-            });
-          }
-          return '';
+          return date.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          });
         },
         style: {
           colors: '#a1a1aa',
@@ -89,9 +90,7 @@ const Graph = () => {
       },
       axisBorder: { color: '#4b5563' },
       axisTicks: { color: '#4b5563' },
-      tickAmount: dataArray.length - 1,
-      min: new Date(Date.now() - (1 * 60 * 1000 * (dataArray.length - 1))).getTime(),
-      max: Date.now(),
+      tickAmount: 6, // Show fewer ticks for better readability
     },
     yaxis: {
       tooltip: { enabled: true },
@@ -101,6 +100,7 @@ const Graph = () => {
           fontSize: '12px',
           fontWeight: '600',
         },
+        formatter: (value) => value.toFixed(2)
       },
     },
     plotOptions: {
@@ -154,6 +154,7 @@ const Graph = () => {
       </div>
       <div className="mixed-chart">
         <ReactApexChart
+          key={`chart-${dataArray.length}`}
           options={options}
           series={series}
           type="candlestick"
