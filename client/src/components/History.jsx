@@ -229,9 +229,9 @@ const History = () => {
   const [marketPrice, setMarketPrice] = useState("0.00");
   const [activeTab, setActiveTab] = useState('live');
 
-  const formatIndianNumber = (number) => {
-    return Number(number).toLocaleString('en-IN');
-  };
+  const formatInternationalNumber = (number) => {
+    return Number(number).toLocaleString('en-US');
+};
 
   const fetchPositions = async () => {
     try {
@@ -379,14 +379,14 @@ const History = () => {
                   <td className={`px-4 py-3 font-medium ${position.isBuy ? 'text-green-400' : 'text-red-400'}`}>
                     {position.isBuy ? 'Buy' : 'Sell'}
                   </td>
-                  <td className="px-4 py-3">${formatIndianNumber(position.entryPrice)}</td>
-                  <td className="px-4 py-3">{formatIndianNumber(position.tokenUnits)}</td>
-                  <td className="px-4 py-3">{formatIndianNumber(position.leverage)}x</td>
-                  <td className="px-4 py-3">${formatIndianNumber((position.collateral * position.entryPrice).toFixed(2))}</td>
+                  <td className="px-4 py-3">${formatInternationalNumber(position.entryPrice)}</td>
+                  <td className="px-4 py-3">{formatInternationalNumber(position.tokenUnits)}</td>
+                  <td className="px-4 py-3">{formatInternationalNumber(position.leverage)}x</td>
+                  <td className="px-4 py-3">${formatInternationalNumber((position.collateral * position.entryPrice).toFixed(2))}</td>
                   <td className={`px-4 py-3 font-medium ${
                     position.pnl >= position.previousPnl ? 'text-green-400' : 'text-red-400'
                   }`}>
-                    ${formatIndianNumber(position.pnl.toFixed(2))}
+                    ${formatInternationalNumber(position.pnl.toFixed(2))}
                   </td>
                   {isLive && (
                     <td className="px-4 py-3">
@@ -415,7 +415,7 @@ const History = () => {
     <div className="min-h-screen p-10 bg-black text-white">
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold mb-4">Trade History</h1>
-        <p className="text-xl text-gray-400">Market Price: ${formatIndianNumber(marketPrice)}</p>
+        <p className="text-xl text-gray-400">Market Price: ${formatInternationalNumber(marketPrice)}</p>
       </div>
       <div className="flex justify-center space-x-4 mb-8">
         <TabButton id="live" label="Live Positions" count={openPositions.length} />

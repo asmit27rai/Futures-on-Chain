@@ -3,7 +3,6 @@
 // import web3 from '../backend/contracts/web3';
 // import futures from '../backend/contracts/futures';
 
-
 // const Header = () => {
 //   const [marketPrice, setMarketPrice] = useState("0.00");
 //   const [previousPrice, setPreviousPrice] = useState("0.00");
@@ -147,10 +146,15 @@
 
 // export default Header;
 
-
-import React, { useState, useEffect, useCallback } from 'react';
-import { TrendingUp, TrendingDown, Activity, ArrowUp, ArrowDown } from 'lucide-react';
-import futures from '../backend/contracts/futures';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import futures from "../backend/contracts/futures";
 
 const Header = () => {
   const [marketPrice, setMarketPrice] = useState("0.00");
@@ -163,8 +167,8 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [priceChangeAnimation, setPriceChangeAnimation] = useState(false);
 
-  const formatToIndianNumbering = (value) => {
-    return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(value);
+  const formatInternationalNumber = (number) => {
+    return Number(number).toLocaleString("en-US");
   };
 
   const fetchMarketData = useCallback(async () => {
@@ -174,15 +178,15 @@ const Header = () => {
         futures.methods.dailyHigh().call(),
         futures.methods.dailyLow().call(),
         futures.methods.indexPrice().call(),
-        futures.methods.dailyExchangeVolume().call()
+        futures.methods.dailyExchangeVolume().call(),
       ]);
 
       const newMarketPrice = (Number(marketPrice) / 1_000_000).toFixed(2);
-      
+
       if (Number(newMarketPrice) > Number(previousPrice)) {
-        setPriceDirection('up');
+        setPriceDirection("up");
       } else if (Number(newMarketPrice) < Number(previousPrice)) {
-        setPriceDirection('down');
+        setPriceDirection("down");
       }
 
       if (newMarketPrice !== marketPrice) {
@@ -214,10 +218,13 @@ const Header = () => {
     <div className="flex flex-col items-center">
       <div className="flex items-center gap-1">
         <Icon className={`w-4 h-4 ${color}`} />
-        <span className="text-[8px] font-medium text-gray-600 uppercase">{title}</span>
+        <span className="text-[8px] font-medium text-gray-600 uppercase">
+          {title}
+        </span>
       </div>
       <span className={`text-sm font-bold ${color} tabular-nums`}>
-        ${formatToIndianNumbering(value)}{suffix}
+        ${formatInternationalNumber(value)}
+        {suffix}
       </span>
     </div>
   );
@@ -236,24 +243,30 @@ const Header = () => {
         <PriceItem
           title="Market Price"
           value={marketPrice}
-          icon={priceDirection === 'up' ? TrendingUp : TrendingDown}
-          color={priceChangeAnimation ? (priceDirection === 'up' ? 'animate-green' : 'animate-red') : 'text-gray-500'}
+          icon={priceDirection === "up" ? TrendingUp : TrendingDown}
+          color={
+            priceChangeAnimation
+              ? priceDirection === "up"
+                ? "animate-green"
+                : "animate-red"
+              : "text-gray-500"
+          }
         />
-        
+
         <PriceItem
           title="Daily High"
           value={dailyHigh}
           icon={ArrowUp}
           color="text-blue-500"
         />
-        
+
         <PriceItem
           title="Daily Low"
           value={dailyLow}
           icon={ArrowDown}
           color="text-red-500"
         />
-        
+
         <PriceItem
           title="Index Price"
           value={indexPrice}
@@ -275,22 +288,36 @@ const Header = () => {
           color: #22c55e;
           animation: pulseGreen 0.3s ease-in-out;
         }
-        
+
         .animate-red {
           color: #ef4444;
           animation: pulseRed 0.3s ease-in-out;
         }
-        
+
         @keyframes pulseGreen {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.1); color: #22c55e; }
-          100% { transform: scale(1); }
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+            color: #22c55e;
+          }
+          100% {
+            transform: scale(1);
+          }
         }
-        
+
         @keyframes pulseRed {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.1); color: #ef4444; }
-          100% { transform: scale(1); }
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.1);
+            color: #ef4444;
+          }
+          100% {
+            transform: scale(1);
+          }
         }
       `}</style>
     </header>
