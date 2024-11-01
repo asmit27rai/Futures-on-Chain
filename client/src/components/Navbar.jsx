@@ -112,6 +112,8 @@
 
 import React, { useState, useEffect } from "react";
 import { User, TrendingUp, TrendingDown } from 'lucide-react';
+import web3 from '../backend/contracts/web3';
+import futures from '../backend/contracts/futures';
 
 const Navbar = () => {
   const [account, setAccount] = useState(null);
@@ -159,9 +161,11 @@ const Navbar = () => {
     }
   };
 
-  const fetchProfitLoss = () => {
-    const mockProfitLoss = Math.random() * 200 - 100; // Random value between -100 and 100
-    setProfitLoss(mockProfitLoss);
+  const fetchProfitLoss = async () => {
+    const accounts = await web3.eth.getAccounts();
+    var totalPnl = await futures.methods.getnetPnl(accounts[0]).call();
+    totalPnl = Number(totalPnl)/1e18;
+    setProfitLoss(totalPnl.toFixed(2));
   };
 
   useEffect(() => {

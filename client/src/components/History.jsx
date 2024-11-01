@@ -252,13 +252,13 @@ const History = () => {
       for (let i = 0; i < openPosCount; i++) {
         const pos = await futures.methods.openPositions(userAddress, i).call();
         const pnl = await futures.methods.calculatePnL(userAddress, i).call();
-        const pnlValue = (Number(pnl) / 1_000) * newMarketPrice * Number(pos[2]);
+        const pnlValue = (Number(pnl) / 1e18)*(Number(pos[1]) / 1_000_000) ;
         
         openPosArray.push({
           index: i,
           leverage: Number(pos[0]),
           entryPrice: (Number(pos[1]) / 1_000_000).toFixed(2),
-          tokenUnits: Number(pos[2]),
+          tokenUnits: Number(pos[2])/1e18,
           collateral: Number(pos[3]),
           timestamp: new Date(Number(pos[4]) * 1000).toLocaleString(),
           isBuy: pos[5],
@@ -275,12 +275,12 @@ const History = () => {
       for (let i = 0; i < closedPosCount; i++) {
         const pos = await futures.methods.settledPositions(userAddress, i).call();
         const pnl = await futures.methods.pnlHistory(userAddress, i).call();
-        const pnlValue = (Number(pnl) / 1_000) * newMarketPrice * Number(pos[2]);
+        const pnlValue = (Number(pnl) / 1e18)*(Number(pos[1]) / 1_000_000);
 
         closedPosArray.push({
           leverage: Number(pos[0]),
           entryPrice: (Number(pos[1]) / 1_000_000).toFixed(2),
-          tokenUnits: Number(pos[2]),
+          tokenUnits: Number(pos[2])/1e18,
           collateral: Number(pos[3]),
           timestamp: new Date(Number(pos[4]) * 1000).toLocaleString(),
           isBuy: pos[5],
