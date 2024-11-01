@@ -36,10 +36,17 @@ const Graph = () => {
 
   const series = [
     {
-      data: dataArray.map((data, index) => ({
-        x: new Date(Date.now() - (index * 1000 * 60 * 15)),
-        y: [data.open, data.high, data.low, data.close],
-      })),
+      data: dataArray.map((data, index) => {
+        const currentTime = new Date();
+        const timestamp = new Date(currentTime.getTime() - (index * 5 * 60 * 1000));
+
+        return {
+          x: timestamp.getTime(),
+          y: [data.open, data.high, data.low, data.close],
+          volume: data.volume,
+          blockNumber: data.blockNumber,
+        };
+      }),
     },
   ];
 
@@ -62,14 +69,25 @@ const Graph = () => {
     xaxis: {
       type: 'datetime',
       labels: {
+        formatter: (value) => {
+          return new Date(value).toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false
+          });
+        },
         style: {
           colors: '#a1a1aa',
           fontSize: '12px',
           fontWeight: '600',
         },
+        datetimeUTC: false,
       },
       axisBorder: { color: '#4b5563' },
       axisTicks: { color: '#4b5563' },
+      tickAmount: dataArray.length - 1,
+      min: new Date(Date.now() - (5 * 60 * 1000 * (dataArray.length - 1))).getTime(),
+      max: Date.now(),
     },
     yaxis: {
       tooltip: { enabled: true },
@@ -91,8 +109,28 @@ const Graph = () => {
     },
     tooltip: {
       theme: 'dark',
-      y: {
-        formatter: (value) => value.toFixed(2),
+      custom: ({ seriesIndex, dataPointIndex, w }) => {
+        const data = w.config.series[seriesIndex].data[dataPointIndex];
+        const timestamp = new Date(data.x).toLocaleTimeString([], { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: false 
+        });
+        const [open, high, low, close] = data.y;
+        const volume = data.volume;
+        
+        return `
+          <div class="px-4 py-2">
+            <div class="text-xs text-gray-400">${timestamp}</div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div>Open: <span class="text-white">${open.toFixed(2)}</span></div>
+              <div>High: <span class="text-white">${high.toFixed(2)}</span></div>
+              <div>Low: <span class="text-white">${low.toFixed(2)}</span></div>
+              <div>Close: <span class="text-white">${close.toFixed(2)}</span></div>
+              <div>Volume: <span class="text-white">${volume.toLocaleString()}</span></div>
+            </div>
+          </div>
+        `;
       },
     },
   };
