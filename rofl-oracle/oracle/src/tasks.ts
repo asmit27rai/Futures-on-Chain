@@ -186,6 +186,30 @@ task("get-orderbook-history", "Retrieves the orderbook history from the Oracle c
     });
   });
 
+  task("transfer-native-token", "Transfers native tokens from msg.sender to the specified account in ether")
+  .addParam("account", "The recipient account address")
+  .addParam("amount", "The amount of native tokens to send (in ether)")
+  .setAction(async (taskArgs, hre) => {
+    const { account, amount } = taskArgs;
+    const [sender] = await hre.ethers.getSigners();
+
+    console.log("Transferring native tokens...");
+    console.log(`Sender: ${sender.address}`);
+    console.log(`Recipient: ${account}`);
+    console.log(`Amount: ${amount} ether`);
+
+    try {
+      const tx = await sender.sendTransaction({
+        to: account,
+        value: hre.ethers.parseEther(amount), // Convert amount from ether to wei
+      });
+      await tx.wait();
+      console.log(`Successfully transferred ${amount} ether to ${account}`);
+    } catch (error) {
+      console.error("Transfer failed:", error);
+    }
+  });
+
 
 // npx hardhat open-position --buy --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --leverage 30 --tokenamount 150 --network sapphire-localnet
 // npx hardhat oracle-query 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --network sapphire-localnet
