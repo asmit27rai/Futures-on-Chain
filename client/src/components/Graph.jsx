@@ -69,12 +69,16 @@ const Graph = () => {
     xaxis: {
       type: 'datetime',
       labels: {
-        formatter: (value) => {
-          return new Date(value).toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            hour12: false
-          });
+        formatter: (value, timestamp, index) => {
+          const date = new Date(value);
+          if (date.getMinutes() % 5 === 0) {
+            return date.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            });
+          }
+          return '';
         },
         style: {
           colors: '#a1a1aa',
@@ -86,7 +90,7 @@ const Graph = () => {
       axisBorder: { color: '#4b5563' },
       axisTicks: { color: '#4b5563' },
       tickAmount: dataArray.length - 1,
-      min: new Date(Date.now() - (5 * 60 * 1000 * (dataArray.length - 1))).getTime(),
+      min: new Date(Date.now() - (1 * 60 * 1000 * (dataArray.length - 1))).getTime(),
       max: Date.now(),
     },
     yaxis: {
