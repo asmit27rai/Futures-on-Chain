@@ -30,13 +30,13 @@ const History = () => {
       for (let i = 0; i < openPosCount; i++) {
         const pos = await futures.methods.openPositions(userAddress, i).call();
         const pnl = await futures.methods.calculatePnL(userAddress, i).call();
-        const pnlValue = (Number(pnl) / 1_000) * newMarketPrice * Number(pos[2]);
+        const pnlValue = (Number(pnl) / 1e18)*(Number(pos[1]) / 1_000_000);
 
         openPosArray.push({
           index: i,
           leverage: Number(pos[0]),
           entryPrice: (Number(pos[1]) / 1_000_000).toFixed(2),
-          tokenUnits: Number(pos[2]),
+          tokenUnits: Number(pos[2])/1e18,
           collateral: Number(pos[3]),
           timestamp: new Date(Number(pos[4]) * 1000).toLocaleString(),
           isBuy: pos[5],
@@ -53,12 +53,12 @@ const History = () => {
       for (let i = 0; i < closedPosCount; i++) {
         const pos = await futures.methods.settledPositions(userAddress, i).call();
         const pnl = await futures.methods.pnlHistory(userAddress, i).call();
-        const pnlValue = (Number(pnl) / 1_000) * newMarketPrice * Number(pos[2]);
+        const pnlValue = (Number(pnl) / 1e18)*(Number(pos[1]) / 1_000_000) ;
 
         closedPosArray.push({
           leverage: Number(pos[0]),
           entryPrice: (Number(pos[1]) / 1_000_000).toFixed(2),
-          tokenUnits: Number(pos[2]),
+          tokenUnits: Number(pos[2])/1e18,
           collateral: Number(pos[3]),
           timestamp: new Date(Number(pos[4]) * 1000).toLocaleString(),
           isBuy: pos[5],
@@ -160,11 +160,11 @@ const History = () => {
                   <td className="px-4 py-3">${position.entryPrice}</td>
                   <td className="px-4 py-3">{position.tokenUnits}</td>
                   <td className="px-4 py-3">{position.leverage}x</td>
-                  <td className="px-4 py-3">${(position.collateral * position.entryPrice).toFixed(2)}</td>
+                  <td className="px-4 py-3">${(position.collateral * position.entryPrice/1e18).toFixed(2)}</td>
                   <td className={`px-4 py-3 font-medium ${
                     position.pnl >= position.previousPnl ? 'text-green-400' : 'text-red-400'
                   }`}>
-                    ${position.pnl.toFixed(2)}
+                    ${(position.pnl).toFixed(2)}
                   </td>
                   {isLive && (
                     <td className="px-4 py-3">
@@ -190,7 +190,7 @@ const History = () => {
   );
 
   return (
-    <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-6xl mx-auto mt-8">
+    <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl shadow-2xl w-full mx-auto mt-8">
       <div className="flex justify-center space-x-4 mb-8 bg-gray-800/50 backdrop-blur-sm p-2 rounded-xl
         max-w-md">
         <TabButton

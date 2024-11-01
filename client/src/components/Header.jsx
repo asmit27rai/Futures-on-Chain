@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, Activity, ArrowUp, ArrowDown } from 'lucide-r
 import web3 from '../backend/contracts/web3';
 import futures from '../backend/contracts/futures';
 
+
 const Header = () => {
   const [marketPrice, setMarketPrice] = useState("0.00");
   const [previousPrice, setPreviousPrice] = useState("0.00");
@@ -34,7 +35,7 @@ const Header = () => {
 
       if (newMarketPrice !== marketPrice) {
         setPriceChangeAnimation(true);
-        setTimeout(() => setPriceChangeAnimation(false), 300); // reset animation after 300ms
+        setTimeout(() => setPriceChangeAnimation(false), 300);
       }
 
       setPreviousPrice(newMarketPrice);
@@ -42,7 +43,8 @@ const Header = () => {
       setDailyHigh((Number(high) / 1_000_000).toFixed(2));
       setDailyLow((Number(low) / 1_000_000).toFixed(2));
       setIndexPrice((Number(index) / 1_000_000).toFixed(2));
-      setDailyExchangeVolume((Number(volume) / 1_000_000).toFixed(2));
+      // Convert volume to millions
+      setDailyExchangeVolume((Number(volume) / 1_000_000_000).toFixed(2));
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching market data:", error);
@@ -56,14 +58,14 @@ const Header = () => {
     return () => clearInterval(interval);
   }, [fetchMarketData]);
 
-  const PriceItem = ({ title, value, icon: Icon, color }) => (
+  const PriceItem = ({ title, value, icon: Icon, color, suffix }) => (
     <div className="flex flex-col items-center">
       <div className="flex items-center gap-1">
         <Icon className={`w-4 h-4 ${color}`} />
         <span className="text-[8px] font-medium text-gray-600 uppercase">{title}</span>
       </div>
       <span className={`text-sm font-bold ${color} tabular-nums`}>
-        ${value}
+        ${value}{suffix}
       </span>
     </div>
   );
@@ -77,7 +79,7 @@ const Header = () => {
   }
 
   return (
-    <header className="bg-gray-800/90 backdrop-blur-sm h-12 px-3 w-full border-b border-gray-700 m-4 border rounded">
+    <header className="bg-gray-800/90 backdrop-blur-sm h-16 px-3 w-full border-b border-gray-700 m-4 border rounded">
       <div className="h-full max-w-screen-xl mx-auto flex items-center justify-between gap-3">
         <PriceItem
           title="Market Price"
@@ -112,17 +114,18 @@ const Header = () => {
           value={dailyExchangeVolume}
           icon={Activity}
           color="text-yellow-500"
+          suffix="M"
         />
       </div>
 
       <style jsx>{`
         .animate-green {
-          color: #22c55e; /* green */
+          color: #22c55e;
           animation: pulseGreen 0.3s ease-in-out;
         }
 
         .animate-red {
-          color: #ef4444; /* red */
+          color: #ef4444;
           animation: pulseRed 0.3s ease-in-out;
         }
 

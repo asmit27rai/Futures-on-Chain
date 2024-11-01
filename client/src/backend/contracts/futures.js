@@ -15,6 +15,11 @@ const abi = [
 				"internalType": "uint8",
 				"name": "_threshold",
 				"type": "uint8"
+			},
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
@@ -218,6 +223,25 @@ const abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"name": "getnetPnl",
+		"outputs": [
+			{
+				"internalType": "int128",
+				"name": "",
+				"type": "int128"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "historyIndex",
 		"outputs": [
@@ -238,6 +262,38 @@ const abi = [
 				"internalType": "uint128",
 				"name": "",
 				"type": "uint128"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "modelSignal",
+		"outputs": [
+			{
+				"internalType": "int128",
+				"name": "",
+				"type": "int128"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "netPnl",
+		"outputs": [
+			{
+				"internalType": "int128",
+				"name": "",
+				"type": "int128"
 			}
 		],
 		"stateMutability": "view",
@@ -647,6 +703,19 @@ const abi = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "int128",
+				"name": "newModelSignal",
+				"type": "int128"
+			}
+		],
+		"name": "updateModelSignal",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

@@ -32,7 +32,7 @@ const Navbar = () => {
     <nav className="bg-gradient-to-r from-gray-900 via-black to-gray-900 h-16 w-full flex items-center px-6 shadow-md">
       <div className="flex items-center gap-3">
         <img src="/logo.svg" alt="On-Chain Future" className="w-10 h-10" />
-        <h1 className="text-2xl font-semibold text-white tracking-wide">On-Chain Future</h1>
+        <h1 className="text-2xl font-semibold text-white tracking-wide">Futures on Chain</h1>
       </div>
 
       <div className="ml-auto flex items-center gap-4">
