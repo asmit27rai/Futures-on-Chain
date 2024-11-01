@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out")
+  set(CMAKE_INSTALL_PREFIX "/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

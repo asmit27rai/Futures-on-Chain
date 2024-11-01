@@ -54,7 +54,7 @@ contract Oracle {
         uint256 blockNumber;
     }
 
-    Orderbook[15] public orderbookHistory;
+    Orderbook[30] public orderbookHistory;
     uint public orderbookIndex = 0;
 
      function submitOrderbookData(
@@ -79,7 +79,7 @@ contract Oracle {
     }
 
     // Function to retrieve the entire orderbook history
-    function getOrderbookHistory() external view returns (Orderbook[15] memory) {
+    function getOrderbookHistory() external view returns (Orderbook[30] memory) {
         return orderbookHistory;
     }
 
@@ -92,15 +92,17 @@ contract Oracle {
     mapping(address => FuturesContract[]) public settledPositions;
     mapping(address => uint256[2]) public positionsCount; // [0] = open, [1] = settled
     mapping(address => int128[]) public pnlHistory;
+    mapping(address => int128) public netPnl;
 
-    OHLCV[15] public ohlcvHistory;
+    OHLCV[30] public ohlcvHistory;
     uint256 public historyIndex = 0;
 
-    constructor(bytes21 _roflAppID, uint8 _threshold) {
+    constructor(bytes21 _roflAppID, uint8 _threshold, address _token) {
         require(_threshold > 0, "Invalid threshold");
         roflAppID = _roflAppID;
         threshold = _threshold;
-        for(uint i = 0;i<15;i++){ //shift the array
+        token = IMintableERC20(_token);
+        for(uint i = 0;i<30;i++){ //shift the array
             ohlcvHistory[i]=OHLCV({
             open: 0,
             high: 0,
@@ -128,17 +130,17 @@ contract Oracle {
     ) external {
         Subcall.roflEnsureAuthorizedOrigin(roflAppID); // Ensure only authorized origin
         bool diffenentData = false;
-        if(ohlcvHistory[14].open!=open || ohlcvHistory[14].high!=high || ohlcvHistory[14].low!=low || ohlcvHistory[14].close!=close || ohlcvHistory[14].volume!=volume){
+        if(ohlcvHistory[29].open!=open || ohlcvHistory[29].high!=high || ohlcvHistory[29].low!=low || ohlcvHistory[29].close!=close || ohlcvHistory[29].volume!=volume){
             diffenentData = true;
         }
         if(!diffenentData){
             return;
         }
-        for (uint i = 0; i < 14; i++) {
+        for (uint i = 0; i < 29; i++) {
             ohlcvHistory[i] = ohlcvHistory[i + 1];
         }
         // Add the new observation
-        ohlcvHistory[14] = OHLCV({
+        ohlcvHistory[29] = OHLCV({
             open: open,
             high: high,
             low: low,
@@ -163,13 +165,16 @@ contract Oracle {
         dailyLow = _dailyLow;
     }
 
-    function getOHLCVHistory() external view returns (OHLCV[15] memory) {
+    function getOHLCVHistory() external view returns (OHLCV[30] memory) {
         return ohlcvHistory;
     }
 
     function openPosition(uint128 _leverage, uint128 tokenAmount, bool _isBuy) external {
         require(_leverage >= 1 && _leverage <= 100, "Invalid leverage");
-
+        //
+        require(token.balanceOf(msg.sender) >= tokenAmount, "Insufficient token balance");
+        token.transferFrom(msg.sender, address(this), tokenAmount);
+        //
         openPositions[msg.sender].push(FuturesContract({
             leverage: _leverage,
             entryPrice: currentMarketPrice,
@@ -189,16 +194,24 @@ contract Oracle {
         int128 pnl = calculatePnL(msg.sender, positionIndex);
         settledPositions[msg.sender].push(position);
         pnlHistory[msg.sender].push(pnl);
+        if(settledPositions[msg.sender].length==0&& openPositions[msg.sender].length==0)
+        {
+            netPnl[msg.sender] = 0;
+        }
         if (pnl < 0) {
             uint128 loss = uint128(-pnl);
             if (loss >= position.collateral) {
                 _removePosition(msg.sender, positionIndex); // Liquidate position
             } else {
+                netPnl[msg.sender] -= int128(loss)*int128(position.entryPrice);
                 _removePosition(msg.sender, positionIndex); // Return remaining collateral
+                token.transfer(msg.sender, position.collateral - loss); // Return remaining collateral after loss
             }
         } else {
             uint128 profit = uint128(pnl);
+            netPnl[msg.sender] -= int128(profit)*int128(position.entryPrice);
             _removePosition(msg.sender, positionIndex); // Transfer profit + collateral
+            token.transfer(msg.sender, position.collateral + profit); // Return remaining collateral after loss
         }
 
         positionsCount[msg.sender][0]--;
@@ -225,6 +238,10 @@ contract Oracle {
             openPositions[user][index] = openPositions[user][length - 1];
         }
         openPositions[user].pop();
+    }
+
+    function getnetPnl(address user) external view returns(int128) {
+        return netPnl[user];
     }
 }
 // npx hardhat compile

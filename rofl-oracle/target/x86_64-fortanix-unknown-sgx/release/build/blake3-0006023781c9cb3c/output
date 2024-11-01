@@ -8,7 +8,7 @@ cargo:rustc-check-cfg=cfg(blake3_avx512_ffi, values(none()))
 cargo:rustc-check-cfg=cfg(blake3_neon, values(none()))
 cargo:rerun-if-env-changed=CARGO_FEATURE_PURE
 cargo:rerun-if-env-changed=CARGO_FEATURE_NO_NEON
-OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
+OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
 TARGET = Some(x86_64-fortanix-unknown-sgx)
 HOST = Some(x86_64-unknown-linux-gnu)
 CC_x86_64-fortanix-unknown-sgx = None
@@ -19,7 +19,7 @@ CROSS_COMPILE = None
 RUSTC_LINKER = None
 cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
 RUSTC_WRAPPER = None
-OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
+OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
 cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
 CRATE_CC_NO_DEFAULTS = None
 CARGO_CFG_TARGET_FEATURE = Some(aes,fxsr,rdrand,rdseed,sse,sse2,sse3,ssse3)
@@ -28,7 +28,7 @@ CFLAGS_x86_64-fortanix-unknown-sgx = None
 CFLAGS_x86_64_fortanix_unknown_sgx = None
 TARGET_CFLAGS = None
 CFLAGS = None
-OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
+OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
 cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
 CRATE_CC_NO_DEFAULTS = None
 CARGO_CFG_TARGET_FEATURE = Some(aes,fxsr,rdrand,rdseed,sse,sse2,sse3,ssse3)
@@ -42,7 +42,7 @@ cargo:rerun-if-env-changed=CARGO_FEATURE_PURE
 cargo:rustc-cfg=blake3_sse2_ffi
 cargo:rustc-cfg=blake3_sse41_ffi
 cargo:rustc-cfg=blake3_avx2_ffi
-OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
+OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
 TARGET = Some(x86_64-fortanix-unknown-sgx)
 OPT_LEVEL = Some(3)
 HOST = Some(x86_64-unknown-linux-gnu)
@@ -70,11 +70,11 @@ ARFLAGS_x86_64_fortanix_unknown_sgx = None
 TARGET_ARFLAGS = None
 ARFLAGS = None
 cargo:rustc-link-lib=static=blake3_sse2_sse41_avx2_assembly
-cargo:rustc-link-search=native=/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out
+cargo:rustc-link-search=native=/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out
 cargo:rerun-if-env-changed=CARGO_FEATURE_PURE
 cargo:rerun-if-env-changed=CARGO_FEATURE_PREFER_INTRINSICS
 cargo:rustc-cfg=blake3_avx512_ffi
-OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
+OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out)
 TARGET = Some(x86_64-fortanix-unknown-sgx)
 OPT_LEVEL = Some(3)
 HOST = Some(x86_64-unknown-linux-gnu)
@@ -102,7 +102,7 @@ ARFLAGS_x86_64_fortanix_unknown_sgx = None
 TARGET_ARFLAGS = None
 ARFLAGS = None
 cargo:rustc-link-lib=static=blake3_avx512_assembly
-cargo:rustc-link-search=native=/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out
+cargo:rustc-link-search=native=/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/blake3-0006023781c9cb3c/out
 cargo:rerun-if-env-changed=CARGO_FEATURE_NEON
 cargo:rerun-if-env-changed=CARGO_FEATURE_NO_NEON
 cargo:rerun-if-env-changed=CARGO_FEATURE_PURE

@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/archit/.cargo/registry/src/index.crates.io-6f17d22bba15001f/mbedtls-sys-auto-2.28.7/vendor")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/mbedtls-sys-auto-5eb9fdb450c1e574/out/build")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/x86_64-fortanix-unknown-sgx/release/build/mbedtls-sys-auto-5eb9fdb450c1e574/out/build")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

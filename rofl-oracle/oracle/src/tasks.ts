@@ -23,26 +23,26 @@ task("deploy", "Deploy the oracle contract")
     const rawAppID = new Uint8Array(bech32.fromWords(words));
 
     // Deploy a new instance of the oracle contract configuring the ROFL app that is
-    // allowed to submit observations and the number of app instances required.
-    const oracle = await hre.ethers.deployContract("Oracle", [rawAppID, threshold], {});
+    // allowed to submit observations and the number of app instances required
+    const oracle = await hre.ethers.deployContract("Oracle", [rawAppID, threshold,token.target], {});
     await oracle.waitForDeployment();
 
     console.log(`Oracle for ROFL app ${roflAppID} deployed to ${oracle.target}`);
 
     // Mint tokens to the Oracle contract
-    const mintAmount = hre.ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens
+    const mintAmount = hre.ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens to the contract
     await token.mint(oracle.target, mintAmount);
     console.log(`Minted ${mintAmount.toString()} tokens to Oracle contract`);
 
   });
 
 task("mint", "Mint tokens to the an address")
-  .addParam("contractAddress", "The contract to mint tokens to")
-  .setAction(async ({ contractAddress }, { ethers }) => {
+  .addParam("address", "The contract to mint tokens to")
+  .setAction(async ({ address }, { ethers }) => {
       const token = await ethers.getContractAt("Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
       const mintAmount = ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens
-      await token.mint(contractAddress,mintAmount);
-      console.log(`Minted ${mintAmount.toString()} tokens to ${contractAddress}`);
+      await token.mint(address,mintAmount);
+      console.log(`Minted ${mintAmount.toString()} tokens to ${address}`);
   });
 
 task("oracle-query", "Queries the oracle contract")
@@ -65,11 +65,6 @@ task("oracle-query", "Queries the oracle contract")
     try {
       const ohlcvHistory = await oracle.getOHLCVHistory();
       const marketPrice = await oracle.currentMarketPrice();
-      // uint128 public currentMarketPrice=0;
-      // uint128 public dailyExchangeVolume=0;
-      // uint128 public dailyHigh=0;
-      // uint128 public dailyLow=0;
-      // uint128 public indexPrice=0;
       const indexPrice = await oracle.indexPrice();
       const dailyLow = await oracle.dailyLow();
       const dailyHigh = await oracle.dailyHigh();
@@ -103,9 +98,15 @@ task("oracle-query", "Queries the oracle contract")
   .addFlag("buy", "Whether to buy or sell the position")
   .setAction(async (taskArgs, hre) => {
     const { contract, leverage, tokenamount } = taskArgs;
+    const [signer] = await hre.ethers.getSigners();
+    const Token = await hre.ethers.getContractAt("Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+    // Approve the Oracle contract to spend the specified token amount
+    const approvalTx = await Token.connect(signer).approve(contract, tokenamount+10);
+    await approvalTx.wait();
+    console.log(`Approved ${tokenamount} tokens for the Oracle contract.`);
     const Oracle = await hre.ethers.getContractAt("Oracle", contract);
     const marketPrice = await Oracle.currentMarketPrice();
-    const [signer] = await hre.ethers.getSigners();
+
   console.log("Using account:", signer.address);
    const buy =  taskArgs.buy ? true : false;
     // Call openPosition on the deployed contract
@@ -146,16 +147,22 @@ task("get-pnl", "Retrieves the PnL of a specific position index")
 task("close", "Retrieves the PnL of a specific position index")
 .addParam("contract", "The deployed Oracle contract address")
 .addParam("index", "The index of the position to close")
+.addParam("address")
 .setAction(async (taskArgs, hre) => {
-  const { contract }= taskArgs;
+  const { contract,address }= taskArgs;
   const Oracle = await hre.ethers.getContractAt("Oracle", contract);
   const [signer] = await hre.ethers.getSigners();
   console.log("Using account:", signer.address);
-
+  const Token = await hre.ethers.getContractAt("Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+  const balanceBefore = await Token.balanceOf(address);
+    console.log(`User's token balance before closing position: ${hre.ethers.formatUnits(balanceBefore, 18)} tokens`);
   const closePos =  await Oracle.closePosition(taskArgs.index);
+  const balanceAfter = await Token.balanceOf(address);
+  console.log(`User's token balance after closing position: ${hre.ethers.formatUnits(balanceAfter, 18)} tokens`);
 
   console.log(`Position closed`);
 });
+
 
 task("get-orderbook-history", "Retrieves the orderbook history from the Oracle contract")
   .addParam("contract", "The deployed Oracle contract address")
@@ -177,30 +184,6 @@ task("get-orderbook-history", "Retrieves the orderbook history from the Oracle c
       console.log(`  Ask Volume: ${entry.askVolume.toString()}`);
       console.log(`  Block Number: ${entry.blockNumber.toString()}`);
     });
-  });
-
-  task("transfer-native-token", "Transfers native tokens from msg.sender to the specified account in ether")
-  .addParam("account", "The recipient account address")
-  .addParam("amount", "The amount of native tokens to send (in ether)")
-  .setAction(async (taskArgs, hre) => {
-    const { account, amount } = taskArgs;
-    const [sender] = await hre.ethers.getSigners();
-
-    console.log("Transferring native tokens...");
-    console.log(`Sender: ${sender.address}`);
-    console.log(`Recipient: ${account}`);
-    console.log(`Amount: ${amount} ether`);
-
-    try {
-      const tx = await sender.sendTransaction({
-        to: account,
-        value: hre.ethers.parseEther(amount), // Convert amount from ether to wei
-      });
-      await tx.wait();
-      console.log(`Successfully transferred ${amount} ether to ${account}`);
-    } catch (error) {
-      console.error("Transfer failed:", error);
-    }
   });
 
 

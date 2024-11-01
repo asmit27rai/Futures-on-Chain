@@ -174,9 +174,9 @@ const abi = [
 						"type": "uint256"
 					}
 				],
-				"internalType": "struct Oracle.OHLCV[15]",
+				"internalType": "struct Oracle.OHLCV[30]",
 				"name": "",
-				"type": "tuple[15]"
+				"type": "tuple[30]"
 			}
 		],
 		"stateMutability": "view",
@@ -214,9 +214,9 @@ const abi = [
 						"type": "uint256"
 					}
 				],
-				"internalType": "struct Oracle.Orderbook[15]",
+				"internalType": "struct Oracle.Orderbook[30]",
 				"name": "",
-				"type": "tuple[15]"
+				"type": "tuple[30]"
 			}
 		],
 		"stateMutability": "view",

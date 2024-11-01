@@ -19,6 +19,7 @@ const Graph = () => {
           volume: Number(item.volume),
         }));
         formattedData.reverse();
+        console.log(formattedData);
         setDataArray(formattedData);
       } catch (error) {
         console.error("Error fetching OHLC data:", error);
