@@ -106,8 +106,6 @@ const Graph = () => {
           onChange={(e) => setTimeframe(e.target.value)}
         >
           <option value="1">1 Min</option>
-          <option value="30">30 Min</option>
-          <option value="60">1 Hour</option>
           <option value="240">4 Hours</option>
         </select>
         <h2 className="text-2xl font-bold text-gray-200">ETH Candlestick Chart</h2>
