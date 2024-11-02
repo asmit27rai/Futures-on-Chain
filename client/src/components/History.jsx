@@ -166,7 +166,7 @@ const History = () => {
                   <td className="px-4 py-3">{formatInternationalNumber(position.leverage)}x</td>
                   <td className="px-4 py-3">${formatInternationalNumber((position.collateral * position.entryPrice).toFixed(2))}</td>
                   <td className={`px-4 py-3 font-medium ${
-                    position.pnl >= position.previousPnl ? 'text-green-400' : 'text-red-400'
+                    position.pnl >= 0 ? 'text-green-400' : 'text-red-400'
                   }`}>
                     ${formatInternationalNumber(position.pnl.toFixed(2))}
                   </td>
@@ -191,7 +191,7 @@ const History = () => {
         )}
       </div>
     </div>
-  );
+  );  
 
   return (
     <div className="min-h-screen p-10 bg-black text-white">
