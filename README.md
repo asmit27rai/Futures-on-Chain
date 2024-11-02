@@ -1,33 +1,52 @@
 # Futures on Chain: A Secure and Confidential On-Chain Futures Trading Platform
 
-This project presents an innovative on-chain futures trading solution, leveraging the power of the Oasis Sapphire blockchain and ROFL (Runtime OffChain Logiv) to create a secure, confidential, and tamper-proof trading environment. Designed for enhanced privacy and integrity, this platform allows users to trade futures contracts for a custom ERC-20 token whose value dynamically mirrors a real-world currency, such as the USD. Through real-time price updates, a trading bot powered by machine learning, and privacy-preserving execution, our solution empowers traders with accurate market simulations, ensuring reliable trading experiences without compromising data security or transparency.
+This project introduces an innovative on-chain futures trading solution built on the Oasis Sapphire blockchain and using ROFL (Runtime OffChain Logic). This combination creates a secure, confidential, and tamper-proof trading environment. Traders can engage in futures contracts for a custom ERC-20 token, which dynamically mirrors a real-world currency like ETH. Through real-time price updates, a machine-learning-powered trading bot, and privacy-preserving execution, this platform enables reliable trading experiences, balancing both data security and transparency.
+
+Video explaination: https://youtu.be/nJHYSz8WUD0
+
+# System Design
+
+<p align="center">
+  <img src="./public/System_Design.png" alt="Futures on Chain Logo" width="800">
+</p>
 
 ## Key Features
 
 ### 1. On-Chain Futures Trading
-Our platform provides users the capability to execute futures contracts on-chain for a custom ERC-20 token. This token, pegged to a real-world currency, reflects live market fluctuations, allowing users to engage in futures trading as they would in traditional financial markets. The platform handles both gains and losses by adjusting the trader's balance accordingly, enabling transparent and auditable transactions on-chain.
+- **Capability**: Users can execute futures contracts on-chain for a custom ERC-20 token, pegged to a real-world currency.
+- **Transparency**: The platform handles gains and losses by adjusting the trader's balance, enabling transparent and auditable on-chain transactions.
 
 ### 2. Simulated Price Fluctuations with Tamper-Proof Oracle Integration
-Using the Runtime OffChain Logiv (ROFL), the ERC-20 token price is linked to an external real-world currency. ROFL ensures that price updates are securely fetched and delivered without manipulation, thereby simulating real-time market conditions in a decentralized and tamper-resistant manner. This allows traders to make informed decisions on futures contracts based on accurate and unbiased price feeds.
+- **External Price Linkage**: The ERC-20 token's value reflects live market prices through ROFL, simulating real-time conditions.
+- **Tamper-Resistance**: ROFL ensures securely fetched and unmanipulated price updates, empowering traders to make informed futures decisions with trustworthy data.
 
 ### 3. AI-Powered Trading Bot with LSTM Model for Market Predictions
-A unique feature of this platform is a trading bot, powered by an LSTM (Long Short-Term Memory) model, which runs on the ROFL framework. This bot analyzes historical price data to provide predictive market suggestions, advising users to “Buy,” “Strongly Buy,” “Sell,” or “Strongly Sell” based on the current and forecasted trends. This recommendation engine adds a data-driven layer to the trading experience, helping traders make strategic decisions by combining machine learning insights with ROFL's trusted price data.
+- **Predictive Modeling**: A trading bot powered by an LSTM (Long Short-Term Memory) model analyzes historical data and suggests “Buy,” “Strongly Buy,” “Sell,” or “Strongly Sell” actions.
+- **Data-Driven Insights**: This recommendation engine, combined with ROFL's trusted data, provides strategic market insights for traders.
 
 ### 4. Automated Profit and Loss Management
-- **Profit**: If a trade results in a net profit, the platform automatically mints new tokens to be distributed as the payout, ensuring traders can seamlessly realize their gains.
-- **Loss**: When a trade results in a net loss, the platform deducts collateral (margin) posted by the trader to cover losses. This secure process ensures all positions are managed fairly and that the system retains the necessary funds to balance all trades.
+- **Profit Management**: In profitable trades, the platform mints new tokens for payout, allowing traders to realize their gains instantly.
+- **Loss Management**: For losses, the platform deducts the trader's posted collateral, ensuring fair trade handling and funds availability.
 
 ### 5. Privacy-Preserving Execution with Trusted Execution Environments (TEEs)
-Using Oasis’s Sapphire blockchain and TEEs, the platform maintains strict data confidentiality. All trading activities are executed within TEEs, ensuring sensitive trade information remains private while still being verifiable. This setup allows for transparent, auditable trade execution on-chain without exposing traders' data, combining the best of both security and transparency.
+- **Confidentiality**: Using Oasis’s Sapphire blockchain and TEEs, trade activities remain private while ensuring on-chain verification.
+- **Security and Transparency**: TEEs allow secure, auditable trade execution without compromising trader data confidentiality.
 
 ### 6. Trade History and Performance Tracking
-Traders can access their transaction history, view current positions, and assess their performance directly through their wallets. Each transaction is securely recorded on-chain, enabling traders to monitor their historical data, refine strategies, and make better-informed trading decisions. On-chain storage further reinforces the immutability and reliability of the trade records.
+- **Comprehensive Record Keeping**: Traders can access transaction history and performance metrics directly through their wallets.
+- **Immutable Storage**: On-chain storage of trade records ensures data reliability and helps traders optimize strategies over time.
 
 ## Why ROFL?
-ROFL provides critical functionality for this platform by delivering accurate, tamper-resistant price data. In decentralized environments, data reliability is often compromised by manipulation, affecting the validity of price feeds and consequently, the trading outcomes. ROFL mitigates this risk by sourcing and verifying price data from trusted sources, ensuring each update is authentic and resistant to manipulation. ROFL also enables the integration of complex AI models, like our LSTM-based trading bot, which can analyze and predict market trends based on secure and trusted data feeds. This guarantees that our futures trading platform offers users a reliable trading experience, mirroring real-world price dynamics without risk of fraud or manipulation.
+ROFL is essential to the platform’s success due to its tamper-resistant price data capabilities:
+- **Data Integrity**: Ensures price data authenticity, guarding against manipulation and fraud in decentralized environments.
+- **AI Integration**: Supports the LSTM-based trading bot, providing reliable price trend predictions based on secure data feeds, essential for a trustworthy trading experience.
 
 ## Why Oasis Sapphire?
-Oasis Sapphire is uniquely suited for this project due to its robust combination of privacy and scalability. By leveraging Trusted Execution Environments (TEEs), Sapphire allows for secure execution of contracts where sensitive data remains confidential, an essential feature for a futures trading platform where privacy is paramount. In addition, Oasis Sapphire's capacity to handle high transaction volumes with low latency supports a fluid and efficient trading experience, ensuring the platform can scale to meet demand without compromising on security or privacy. This fusion of features makes Oasis Sapphire an ideal choice for deploying a secure, privacy-first, on-chain futures trading solution.
+Oasis Sapphire offers privacy and scalability ideal for a futures trading platform:
+- **Privacy**: Trusted Execution Environments (TEEs) on Sapphire keep sensitive trading data confidential.
+- **Scalability**: Low latency and high transaction handling support efficient trading, even under heavy load.
+- **Reliability**: Sapphire’s security ensures that the platform remains robust, making it an ideal choice for this privacy-focused, on-chain trading solution.
+
 
 # Local Setup
 
@@ -104,9 +123,9 @@ This guide provides a step-by-step setup procedure to deploy and test a Futures 
    Open the app in your browser at the localhost URL provided.
 
 10. **Configure MetaMask**:
-    - Add the Sapphire local testnet using the **Add Network** button.
+    - Add the Sapphire local testnet using the **Add Network** button on the upper right corner.
     - Connect your MetaMask wallet by selecting **Connect**.
 
 ---
 
-With these steps, you’re ready to interact with your Futures dApp on the Oasis Sapphire local network!
+With these steps, you’re ready to interact with your Futures on Chain dApp on the Oasis Sapphire local network!

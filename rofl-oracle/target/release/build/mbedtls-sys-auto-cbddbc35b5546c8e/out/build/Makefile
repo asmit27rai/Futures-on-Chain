@@ -60,7 +60,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/archit/.cargo/registry/src/index.crates.io-6f17d22bba15001f/mbedtls-sys-auto-2.28.7/vendor
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build
+CMAKE_BINARY_DIR = /home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -132,9 +132,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build/CMakeFiles /home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build/CMakeFiles /home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

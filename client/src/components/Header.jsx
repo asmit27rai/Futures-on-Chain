@@ -62,7 +62,7 @@ const Header = () => {
 
   useEffect(() => {
     fetchMarketData();
-    const interval = setInterval(fetchMarketData, 1000);
+    const interval = setInterval(fetchMarketData, 500);
     return () => clearInterval(interval);
   }, [fetchMarketData]);
 

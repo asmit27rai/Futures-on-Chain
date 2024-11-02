@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/archit/.cargo/registry/src/index.crates.io-6f17d22bba15001f/mbedtls-sys-auto-2.28.7/vendor/include -I/home/archit/.cargo/registry/src/index.crates.io-6f17d22bba15001f/mbedtls-sys-auto-2.28.7/vendor/library
 
-C_FLAGS =  -DMBEDTLS_CONFIG_FILE="\"/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/config.h\"" -ffunction-sections -fdata-sections -fPIC -m64 -Wall -Wextra -Wwrite-strings -Wformat=2 -Wno-format-nonliteral -Wvla -Wlogical-op -Wshadow -Wformat-signedness -Wformat-overflow=2 -Wformat-truncation -Werror -Wmissing-declarations -Wmissing-prototypes -O2
+C_FLAGS =  -DMBEDTLS_CONFIG_FILE="\"/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-sys-auto-cbddbc35b5546c8e/out/config.h\"" -ffunction-sections -fdata-sections -fPIC -m64 -Wall -Wextra -Wwrite-strings -Wformat=2 -Wno-format-nonliteral -Wvla -Wlogical-op -Wshadow -Wformat-signedness -Wformat-overflow=2 -Wformat-truncation -Werror -Wmissing-declarations -Wmissing-prototypes -O2
 

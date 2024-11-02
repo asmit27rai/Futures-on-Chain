@@ -1,9 +1,9 @@
-cargo:rustc-cfg=sys_threading_component="pthread"
+cargo:rustc-cfg=sys_time_component="libc"
+cargo:rustc-cfg=sys_std_component="fs"
 cargo:rustc-cfg=sys_std_component="entropy"
 cargo:rustc-cfg=sys_std_component="net"
-cargo:rustc-cfg=sys_std_component="fs"
-cargo:rustc-cfg=sys_time_component="libc"
-OUT_DIR = Some(/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-platform-support-1162f2559b7de28d/out)
+cargo:rustc-cfg=sys_threading_component="pthread"
+OUT_DIR = Some(/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-platform-support-1162f2559b7de28d/out)
 TARGET = Some(x86_64-unknown-linux-gnu)
 OPT_LEVEL = Some(3)
 HOST = Some(x86_64-unknown-linux-gnu)
@@ -46,7 +46,7 @@ HOST_ARFLAGS = None
 cargo:rerun-if-env-changed=ARFLAGS
 ARFLAGS = None
 cargo:rustc-link-lib=static=rust-mbedtls-platform-support
-cargo:rustc-link-search=native=/home/archit/Desktop/web3/rofl_test/rofl-oracle/target/release/build/mbedtls-platform-support-1162f2559b7de28d/out
+cargo:rustc-link-search=native=/home/archit/Desktop/final_hackathon_project/Futures_on_Chain/rofl-oracle/target/release/build/mbedtls-platform-support-1162f2559b7de28d/out
 cargo:rustc-link-lib=static=mbedtls
 cargo:rustc-link-lib=static=mbedx509
 cargo:rustc-link-lib=static=mbedcrypto

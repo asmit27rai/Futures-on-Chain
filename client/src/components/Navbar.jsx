@@ -54,14 +54,14 @@ const Navbar = () => {
   const fetchProfitLoss = async () => {
     const accounts = await web3.eth.getAccounts();
     var totalPnl = await futures.methods.getnetPnl(accounts[0]).call();
-    totalPnl = Number(totalPnl) / 1e18;
+    totalPnl = Number(totalPnl) / 1e24;
     setProfitLoss(totalPnl.toFixed(2));
   };
 
   useEffect(() => {
     if (account) {
       fetchProfitLoss();
-      const intervalId = setInterval(fetchProfitLoss, 2000);
+      const intervalId = setInterval(fetchProfitLoss, 500);
 
       return () => clearInterval(intervalId);
     } else {
@@ -74,7 +74,7 @@ const Navbar = () => {
       <div className="flex items-center gap-3">
         <img src="/logo.svg" alt="On-Chain Future" className="w-10 h-10" />
         <h1 className="text-2xl font-semibold text-white tracking-wide">
-          On-Chain Future
+          Futures on Chain
         </h1>
       </div>
 
