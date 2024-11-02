@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, AlertTriangle, Bot } from 'lucide-react';
+import web3 from "../backend/contracts/web3";
+import futures from "../backend/contracts/futures";
 
 const Prediction = () => {
   const [signal, setSignal] = useState("Neutral");
@@ -13,7 +15,7 @@ const Prediction = () => {
     if (recentSignals.slice(-3).every(sig => sig === 'Sell')) {
       return "STRONG SELL SIGNAL DETECTED";
     }
-    return signal === 'Buy' ? "BUY SIGNAL DETECTED" : signal === 'Sell' ? "SELL SIGNAL DETECTED" : "SCANNING MARKET CONDITIONS";
+    return signal === 'Buy' ? "BUY SIGNAL DETECTED" : signal === 'Sell' ? "SELL SIGNAL DETECTED" : "Neutral";
   };
 
   const getSignalDescription = (signal) => {
@@ -27,9 +29,9 @@ const Prediction = () => {
     }
   };
 
-  const fetchDummySignalData = () => {
-    const newSignal = Math.random() > 0.5 ? "Buy" : "Sell";
-
+  const fetchSignalData = async () => {
+    const newSignal = Number(await futures.methods.modelSignal().call());
+    console.log(newSignal);
     if (newSignal !== signal) {
       setSignalChangeAnimation(true);
       setTimeout(() => setSignalChangeAnimation(false), 300);
@@ -45,8 +47,8 @@ const Prediction = () => {
   };
 
   useEffect(() => {
-    fetchDummySignalData();
-    const interval = setInterval(fetchDummySignalData, 90000);
+    fetchSignalData();
+    const interval = setInterval(fetchSignalData, 90000);
     return () => clearInterval(interval);
   }, [signal]);
 
