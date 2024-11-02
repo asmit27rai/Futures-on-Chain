@@ -209,7 +209,7 @@ contract Oracle {
             }
         } else {
             uint128 profit = uint128(pnl);
-            netPnl[msg.sender] -= int128(profit)*int128(position.entryPrice);
+            netPnl[msg.sender] += int128(profit)*int128(position.entryPrice);
             _removePosition(msg.sender, positionIndex); // Transfer profit + collateral
             token.transfer(msg.sender, position.collateral + profit); // Return remaining collateral after loss
         }
