@@ -10,6 +10,10 @@ Video explaination: https://youtu.be/nJHYSz8WUD0
   <img src="./public/System_Design.png" alt="Futures on Chain Logo" width="800">
 </p>
 
+## Inspiration
+
+The inspiration behind *Futures on Chain* was the desire to create a truly secure and private trading environment, addressing the limitations of traditional platforms and generic blockchain-based exchanges. Our team was motivated by the potential of the Oasis Sapphire blockchain’s TEEs (Trusted Execution Environments) and ROFL (Runtime OffChain Logic) to provide both confidentiality and reliability. This inspired us to explore the boundaries of on-chain futures trading, focusing on creating a platform where users could engage in privacy-preserving, tamper-proof transactions with real-time price feeds and predictive AI insights. This project is a step towards the next evolution of trading platforms, where security and privacy empower users without compromising transparency or functionality.
+
 ## Key Features
 
 ### 1. On-Chain Futures Trading
@@ -54,6 +58,32 @@ Video explaination: https://youtu.be/nJHYSz8WUD0
 <p align="center">
   <img src="./public/close.png" alt="Header">
 </p>
+
+## Challenges Faced
+
+- **ROFL Setup and Integration**: Due to ROFL's recent development, documentation was limited, making it difficult to set up locally for testing. Extensive research, alongside engagement with the Oasis community on Discord, helped us overcome these hurdles. After much trial and error, we successfully configured ROFL to securely interface with our contract.
+
+- **Incorporating LSTM AI Model**: Originally, our project idea was a straightforward on-chain futures platform. However, we felt it lacked a unique factor. Introducing an LSTM model added value by providing market predictions, although we faced a steep learning curve with AI integration. Despite our limited experience with machine learning, we implemented a functional, though basic, LSTM model to deliver insights, with customizable features for future model enhancements.
+
+- **Trading Chart Implementation**: It Is challenging to find a good library in react form making candle stick chart then we come to know about react-apexchart.Optimizing the rendering of large datasets in trading charts while maintaining smooth user interactions and preventing browser performance issues.
+
+## How We Did It:
+
+1. **Contract Development**: The main contract, located at `rofl-oracle/oracle/Oracle.sol`, integrates core trading functionalities with Oasis Sapphire's ROFL setup. By using `Subcall` from the `@oasisprotocol/sapphire-contracts`, we ensured a seamless interaction between the trading logic and the ROFL environment for accurate data processing and pricing.
+
+2. **Backend Iterations**:  The many iterations of the backend createion and the logic behind it can easily be seen located at the rofl-oracle/oracle/src/tasks.ts where all the main logic and trades can be done via the CLI without launching the React app for a eassier testing environment.
+
+3. **Inital thoughts**:  Some of the initial thought process before actual coding can be seen inside this [document](https://docs.google.com/document/d/1ndppAQ9Bw1pJCQWeqqeCvgDKp47SA6NQV-KNDlo0Jfc/edit?usp=sharing)
+
+## How to Add Your Own Trading Bot
+
+If you'd like to add a custom trading bot, follow these steps:
+
+1. **Replace the LSTM Model**: In the current setup, `rofl-oracle/Lstm model/training.py` trains a basic LSTM model and generates a `model.tflite` file. To use a different model, modify `training.py` with your preferred algorithm, train the model, and save it as `model.tflite`.
+
+2. **Adapt the ROFL App**: Depending on the structure of your new model, you may need to adjust `rofl-oracle/src/main.rs` to account for different inputs and outputs. This might include altering the input format for the latest OHLCV (Open, High, Low, Close, Volume) signals based on your data source, such as CryptoCompare or any other API of your choice.
+
+3. **Deploy and Test**: Once configured, deploy the updated ROFL app within the Oasis Sapphire environment to test the bot's performance in predicting market trends and generating signals.
 
 ## Why ROFL?
 

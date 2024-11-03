@@ -10,7 +10,7 @@ use std::sync::{Mutex, RwLock};
 
 /// Address where the oracle contract is deployed.
 // #region oracle-contract-address
-const ORACLE_CONTRACT_ADDRESS: &str = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"; // TODO: Replace with your contract address.
+const ORACLE_CONTRACT_ADDRESS: &str = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 struct OracleApp {
     ohlcv_signals: Mutex<Vec<f64>>, // Updated type to store f64 signals
@@ -102,7 +102,7 @@ impl OracleApp {
         signals.truncate(5);
         Ok(())
     }
-    /// Fetch OHLCV data from CryptoCompare and submit it to the Oracle contract.
+  
     async fn run_oracle(self: Arc<Self>, env: Environment<Self>) -> Result<()> {
             let response: Value = rofl_utils::https::agent()
                 .get("https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USD&limit=10&api_key=3df9cc83af512bebeb5f27bcd1f73556459b93e2fa410f748aa25d3e30213ccf")
@@ -151,7 +151,7 @@ impl OracleApp {
                 env.client().sign_and_submit_tx(env.signer(), tx).await?;
 
 
-          // Fetch OHLCV data
+   
         let response: Value = rofl_utils::https::agent()
         .get("https://min-api.cryptocompare.com/data/v2/histoday?fsym=ETH&tsym=USD&limit=1&api_key=3df9cc83af512bebeb5f27bcd1f73556459b93e2fa410f748aa25d3e30213ccf")
         .call()?
@@ -175,7 +175,7 @@ impl OracleApp {
 
     let market_price = (price_response["USD"].as_f64().unwrap() * 1_000_000.0) as u128;
 
-    // Prepare and submit the transaction to the Oracle contract
+
     let tx_data = [
         ethabi::short_signature("submitMarketObservations", &[
             ethabi::ParamType::Uint(128),
@@ -212,7 +212,7 @@ impl OracleApp {
     .body_mut()
     .read_json()?;
 
-// Extract the data for bid and ask prices
+
 let bid_price = response["Data"]["RAW"]["ETH"]["USD"]["BID"]
     .as_f64()
     .ok_or_else(|| anyhow::anyhow!("Bid price not found"))? * 1_000_000.0;
@@ -224,11 +224,10 @@ let ask_price = response["Data"]["RAW"]["ETH"]["USD"]["ASK"]
 let bid_volume = 1000000u128;
 let ask_volume = 1000000u128;
 
-// Convert prices and volumes to `u128` for contract submission
+
 let bid_price = bid_price as u128;
 let ask_price = ask_price as u128;
 
-// Prepare the transaction data for submitting to the contract
 let tx_data = [
     ethabi::short_signature("submitOrderbookData", &[
         ethabi::ParamType::Uint(128),
@@ -257,10 +256,6 @@ let mut tx = self.new_transaction(
 
 tx.set_fee_gas(3_000_000);
 env.client().sign_and_submit_tx(env.signer(), tx).await?;
-
-
-
-
 
 let response: Value = rofl_utils::https::agent()
             .get("https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USD&limit=10&api_key=3df9cc83af512bebeb5f27bcd1f73556459b93e2fa410f748aa25d3e30213ccf&e=coinbase")
@@ -318,8 +313,4 @@ fn main() {
     let app = OracleApp::new();
     app.start();
 }
-//sudo docker run -it -p8545:8545 -p8546:8546 -v ./rofl-oracle:/rofls ghcr.io/oasisprotocol/sapphire-localnet
-//oasis rofl build sgx --mode unsafe
-//   npx hardhat compile
-//    export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-//  npx hardhat deploy rofl1qqn9xndja7e2pnxhttktmecvwzz0yqwxsquqyxdf --network sapphire-localnet
+

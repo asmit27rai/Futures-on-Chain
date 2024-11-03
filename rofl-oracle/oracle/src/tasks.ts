@@ -5,12 +5,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 task("deploy", "Deploy the oracle contract")
   .addPositionalParam("roflAppID", "ROFL App ID")
   .setAction(async ({ roflAppID }, hre) => {
-    const threshold = 1; // Number of app instances required to submit observations.
-
-    // TODO: Move below to a ROFL helper library (@oasisprotocol/rofl).
-    // const rawAppID = rofl.parseAppID(roflAppID);
-
-
+    const threshold = 1; 
     const token = await hre.ethers.deployContract("Token", []);
     await token.waitForDeployment();
 
@@ -22,15 +17,12 @@ task("deploy", "Deploy the oracle contract")
     }
     const rawAppID = new Uint8Array(bech32.fromWords(words));
 
-    // Deploy a new instance of the oracle contract configuring the ROFL app that is
-    // allowed to submit observations and the number of app instances required
     const oracle = await hre.ethers.deployContract("Oracle", [rawAppID, threshold,token.target], {});
     await oracle.waitForDeployment();
 
     console.log(`Oracle for ROFL app ${roflAppID} deployed to ${oracle.target}`);
 
-    // Mint tokens to the Oracle contract
-    const mintAmount = hre.ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens to the contract
+    const mintAmount = hre.ethers.parseUnits("1000000", 18); 
     await token.mint(oracle.target, mintAmount);
     console.log(`Minted ${mintAmount.toString()} tokens to Oracle contract`);
 
@@ -40,7 +32,7 @@ task("mint", "Mint tokens to the an address")
   .addParam("address", "The contract to mint tokens to")
   .setAction(async ({ address }, { ethers }) => {
       const token = await ethers.getContractAt("Token", "0x5FbDB2315678afecb367f032d93F642f64180aa3");
-      const mintAmount = ethers.parseUnits("1000000", 18); // Mint 1,000,000 tokens
+      const mintAmount = ethers.parseUnits("1000000", 18);
       await token.mint(address,mintAmount);
       console.log(`Minted ${mintAmount.toString()} tokens to ${address}`);
   });
@@ -54,7 +46,6 @@ task("oracle-query", "Queries the oracle contract")
 
     const rawRoflAppID = await oracle.roflAppID();
     const historyIndex = await oracle.historyIndex();
-    // TODO: Move below to a ROFL helper library (@oasisprotocol/rofl).
     const roflAppID = bech32.encode("rofl", bech32.toWords(ethers.getBytes(rawRoflAppID)));
     const threshold = await oracle.threshold();
     const call = await oracle.calls();
@@ -116,7 +107,6 @@ task("oracle-query", "Queries the oracle contract")
     console.log(`At market price ${marketPrice}`);
   });
 
-//npx hardhat open-position --buy --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --leverage 30 --tokenamount 150 --network sapphire-localnet
 
 task("get-pnl", "Retrieves the PnL of a specific position index")
 .addParam("contract", "The deployed Oracle contract address")
@@ -136,7 +126,6 @@ task("get-pnl", "Retrieves the PnL of a specific position index")
   console.log(`Leverage: ${openPos.leverage}`);
   console.log(`TokenUnits: ${openPos.tokenUnits}`);
   console.log(`Collateral: ${openPos.collateral}`);
-  //console.log(`Buy: ${openPos.isBuy}`);
 
   const  pnl = await Oracle.calculatePnL(address,index);
   console.log(`PnL for position ${index}: ${pnl}`);
@@ -209,9 +198,3 @@ task("get-orderbook-history", "Retrieves the orderbook history from the Oracle c
       console.error("Transfer failed:", error);
     }
   });
-
-
-// npx hardhat open-position --buy --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --leverage 30 --tokenamount 150 --network sapphire-localnet
-// npx hardhat oracle-query 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --network sapphire-localnet
-// npx hardhat get-orderbook-history --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --network sapphire-localnet
-// npx hardhat get-pnl --contract 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 --address 0xfcd1e86925C9c066d31AacC78c9e7De32b4574Ae --network sapphire-localnet
